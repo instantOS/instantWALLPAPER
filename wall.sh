@@ -3,7 +3,8 @@
 #######################################
 ## chromecast like wallpaper changer ##
 #######################################
-source <(curl -Ls https://git.io/JerLG)
+
+source ~/paperbenni/import.sh || source <(curl -Ls https://git.io/JerLG)
 pb instantos
 
 mkdir -p $HOME/instantos/wallpapers/default &>/dev/null
@@ -54,7 +55,12 @@ genwallpaper() {
     rm wall.png
     rm invert.png
     rm out.png
+    rm photo.jpg
 }
+
+if [ -n "$1" ]; then
+    genwallpaper
+fi
 
 if date +%A | grep -Ei '(Wednesday|Mittwoch)'; then
     if ! [ -e ~/instantos/wallpaper/wednesday ]; then
