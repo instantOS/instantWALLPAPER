@@ -58,11 +58,12 @@ genwallpaper() {
 
     instantoverlay
     if [ -e /opt/instantos/monitor/max.txt ]; then
-        RESOLUTION=$(cat /opt/instantos/monitor/max.txt)
+        RESOLUTION=$(head -1 /opt/instantos/monitor/max.txt)
     else
         RESOLUTION="1920x1080"
     fi
 
+    echo "RESOLUTION $RESOLUTION"
     convert photo.jpg -resize $RESOLUTION^ -extent $RESOLUTION wall.png
     convert wall.png -negate invert.png
     convert invert.png overlay.png -alpha off -compose CopyOpacity -composite out.png
@@ -75,20 +76,20 @@ genwallpaper() {
 
 if [ -n "$1" ]; then
     genwallpaper google
-fi
-
-if date +%A | grep -Ei '(Wednesday|Mittwoch)'; then
-    if ! [ -e ~/instantos/wallpapers/wednesday ]; then
-
-        genwallpaper
-        touch ~/instantos/wallpapers/wednesday
-    else
-        echo "wallpaper wednesday already happened"
-    fi
 else
-    if [ -e ~/instantos/wallpapers/wednesday ]; then
-        echo "removing cache file"
-        rm ~/instantos/wallpapers/wednesday
+    if date +%A | grep -Ei '(Wednesday|Mittwoch)'; then
+        if ! [ -e ~/instantos/wallpapers/wednesday ]; then
+
+            genwallpaper
+            touch ~/instantos/wallpapers/wednesday
+        else
+            echo "wallpaper wednesday already happened"
+        fi
+    else
+        if [ -e ~/instantos/wallpapers/wednesday ]; then
+            echo "removing cache file"
+            rm ~/instantos/wallpapers/wednesday
+        fi
     fi
 fi
 
