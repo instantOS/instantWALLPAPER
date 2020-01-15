@@ -11,7 +11,7 @@ mkdir -p $HOME/instantos/wallpapers/default &>/dev/null
 cd $HOME/instantos/wallpapers
 
 randomwallpaper() {
-    if curl google.com &> /dev/null; then
+    if curl google.com &>/dev/null; then
         url='https://storage.googleapis.com/chromeos-wallpaper-public'
 
         fetch() {
@@ -53,12 +53,7 @@ genwallpaper() {
     if [ -n "$1" ]; then
         randomwallpaper
     else
-        if $((RANDOM % 2)); then
-            randomwallpaper
-        else
-            bingwallpaper
-        fi
-
+        RANDOMM=$(eval '((RANDOM%2))') && ((RANDOMM == 0)) && CMD='randomwallpaper' || CMD='bingwallpaper' && $CMD
     fi
 
     instantoverlay
@@ -77,17 +72,17 @@ if [ -n "$1" ]; then
 fi
 
 if date +%A | grep -Ei '(Wednesday|Mittwoch)'; then
-    if ! [ -e ~/instantos/wallpaper/wednesday ]; then
+    if ! [ -e ~/instantos/wallpapers/wednesday ]; then
 
         genwallpaper
-        touch ~/instantos/wallpaper/wednesday
+        touch ~/instantos/wallpapers/wednesday
     else
         echo "wallpaper wednesday already happened"
     fi
 else
-    if [ -e ~/instantos/wallpaper/wednesday ]; then
+    if [ -e ~/instantos/wallpapers/wednesday ]; then
         echo "removing cache file"
-        rm ~/instantos/wallpaper/wednesday
+        rm ~/instantos/wallpapers/wednesday
     fi
 fi
 
