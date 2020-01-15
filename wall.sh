@@ -71,7 +71,7 @@ genwallpaper() {
             echo "overlay already resized"
         else
             mv overlay.png overlay2.png
-            convert overlay2.png -resize $RESOLUTION^ -extent $RESOLUTION overlay.png
+            convert overlay2.png -alpha on -background none -gravity center -resize $RESOLUTION^ -gravity center -extent $RESOLUTION overlay.png
             touch .overlayresize
             rm overlay2.png
         fi
