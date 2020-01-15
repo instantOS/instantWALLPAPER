@@ -57,7 +57,13 @@ genwallpaper() {
     fi
 
     instantoverlay
-    convert photo.jpg -resize 1920x1080^ -extent 1920x1080 wall.png
+    if [ -e /opt/instantos/monitor/max.txt ]; then
+        RESOLUTION=$(cat /opt/instantos/monitor/max.txt)
+    else
+        RESOLUTION="1920x1080"
+    fi
+
+    convert photo.jpg -resize $RESOLUTION^ -extent $RESOLUTION wall.png
     convert wall.png -negate invert.png
     convert invert.png overlay.png -alpha off -compose CopyOpacity -composite out.png
     composite out.png wall.png instantwallpaper.png
