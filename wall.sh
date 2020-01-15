@@ -65,6 +65,18 @@ genwallpaper() {
 
     echo "RESOLUTION $RESOLUTION"
     convert photo.jpg -resize $RESOLUTION^ -extent $RESOLUTION wall.png
+
+    if ! [ "$RESOLUTION" = "1920x1080" ]; then
+        if [ -e .overlayresize ]; then
+            echo "overlay already resized"
+        else
+            mv overlay.png overlay2.png
+            convert overlay2.png -resize $RESOLUTION^ -extent $RESOLUTION overlay.png
+            touch .overlayresize
+            rm overlay2.png
+        fi
+    fi
+
     convert wall.png -negate invert.png
     convert invert.png overlay.png -alpha off -compose CopyOpacity -composite out.png
     composite out.png wall.png instantwallpaper.png
