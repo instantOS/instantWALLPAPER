@@ -36,6 +36,17 @@ instantoverlay() {
     [ -e overlay.png ] || wget -q "https://raw.githubusercontent.com/instantOS/instantLOGO/master/wallpaper/overlay.png"
 }
 
+imgresize() {
+    IMGRES=$(identify "$1" | grep -o '[0-9][0-9]*x[0-9][0-9]*' | sort -u | head -1)
+    if [ $IMGRES = "$2" ]; then
+        echo "image already resized"
+        return 0
+    fi
+    mv "$1" "${1%.*}.1.png"
+    convert "${1%.*}.1.png" -alpha on -background none -gravity center -resize $2^ -gravity center -extent $2 ${3:-$1}
+    rm "${1%.*}.1.png"
+}
+
 instantoverlay
 
 if ! [ -e ./default/$(getinstanttheme).png ]; then
@@ -64,18 +75,8 @@ genwallpaper() {
     fi
 
     echo "RESOLUTION $RESOLUTION"
-    convert photo.jpg -resize $RESOLUTION^ -extent $RESOLUTION wall.png
-
-    if ! [ "$RESOLUTION" = "1920x1080" ]; then
-        if [ -e .overlayresize ]; then
-            echo "overlay already resized"
-        else
-            mv overlay.png overlay2.png
-            convert overlay2.png -alpha on -background none -gravity center -resize $RESOLUTION^ -gravity center -extent $RESOLUTION overlay.png
-            touch .overlayresize
-            rm overlay2.png
-        fi
-    fi
+    imgresize photo.jpg $RESOLUTION wall.png
+    imgresize overlay.png $RESOLUTION
 
     convert wall.png -negate invert.png
     convert invert.png overlay.png -alpha off -compose CopyOpacity -composite out.png
