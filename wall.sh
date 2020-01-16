@@ -86,12 +86,11 @@ genwallpaper() {
     rm photo.jpg
 }
 
-if [ -n "$1" ]; then
+if [ -n "$1" ] || ! [ -e instantwallpaper.png ]; then
     genwallpaper google
 else
     if date +%A | grep -Ei '(Wednesday|Mittwoch)'; then
         if ! [ -e ~/instantos/wallpapers/wednesday ]; then
-
             genwallpaper
             touch ~/instantos/wallpapers/wednesday
         else
