@@ -49,10 +49,17 @@ imgresize() {
 
 instantoverlay
 
+if [ -e /opt/instantos/monitor/max.txt ]; then
+    export RESOLUTION=$(head -1 /opt/instantos/monitor/max.txt)
+else
+    export RESOLUTION="1920x1080"
+fi
+
 if ! [ -e ./default/$(getinstanttheme).png ]; then
     echo "generating default wallpaper"
     cd default
     instantoverlay
+    imgresize overlay.png $RESOLUTION
     convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
     convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$(getinstanttheme)".png
     rm color.png
@@ -68,12 +75,6 @@ genwallpaper() {
     fi
 
     instantoverlay
-    if [ -e /opt/instantos/monitor/max.txt ]; then
-        RESOLUTION=$(head -1 /opt/instantos/monitor/max.txt)
-    else
-        RESOLUTION="1920x1080"
-    fi
-
     echo "RESOLUTION $RESOLUTION"
     imgresize photo.jpg $RESOLUTION wall.png
     imgresize overlay.png $RESOLUTION
@@ -84,7 +85,6 @@ genwallpaper() {
     rm wall.png
     rm invert.png
     rm out.png
-    rm photo.jpg
 }
 
 if [ -n "$1" ] || ! [ -e instantwallpaper.png ]; then
