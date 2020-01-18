@@ -80,15 +80,17 @@ genwallpaper() {
     imgresize overlay.png $RESOLUTION
 
     convert wall.png -negate invert.png
-    convert invert.png overlay.png -alpha off -compose CopyOpacity -composite out.png
+    convert overlay.png invert.png -compose Multiply -composite out.png
     composite out.png wall.png instantwallpaper.png
     rm wall.png
     rm invert.png
     rm out.png
 }
 
-if [ -n "$1" ] || ! [ -e instantwallpaper.png ]; then
+if [ -n "$1" ]; then
     genwallpaper google
+elif ! [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
+    genwallpaper
 else
     if date +%A | grep -Ei '(Wednesday|Mittwoch)'; then
         if ! [ -e ~/instantos/wallpapers/wednesday ]; then
@@ -105,4 +107,8 @@ else
     fi
 fi
 
-feh --bg-scale instantwallpaper.png
+if [ -z "$3" ]; then
+    feh --bg-scale instantwallpaper.png
+else
+    echo "feh silenced"
+fi
