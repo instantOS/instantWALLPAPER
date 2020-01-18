@@ -79,7 +79,7 @@ genwallpaper() {
     imgresize photo.jpg $RESOLUTION wall.png
     imgresize overlay.png $RESOLUTION
 
-    convert wall.png -negate invert.png
+    convert wall.png -channel RGB -negate invert.png
     convert overlay.png invert.png -compose Multiply -composite out.png
     composite out.png wall.png instantwallpaper.png
     rm wall.png
