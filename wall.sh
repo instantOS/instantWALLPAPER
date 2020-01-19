@@ -49,8 +49,8 @@ imgresize() {
 
 instantoverlay
 
-if [ -e /opt/instantos/monitor/max.txt ]; then
-    export RESOLUTION=$(head -1 /opt/instantos/monitor/max.txt)
+if [ -e ~/instantos/monitor/max.txt ] && grep -q '....' ~/instantos/monitor/max.txt; then
+    export RESOLUTION=$(head -1 ~/instantos/monitor/max.txt)
 else
     export RESOLUTION="1920x1080"
 fi
