@@ -10,7 +10,7 @@ pb instantos
 mkdir -p $HOME/instantos/wallpapers/default &>/dev/null
 cd $HOME/instantos/wallpapers
 
-randomwallpaper() {
+googlewallpaper() {
     if curl google.com &>/dev/null; then
         url='https://storage.googleapis.com/chromeos-wallpaper-public'
 
@@ -28,12 +28,37 @@ randomwallpaper() {
     fi
 }
 
+wallhaven() {
+    WALLURL=$(curl -Ls 'https://wallhaven.cc/search?q=id%3A711&categories=111&purity=100&sorting=random&order=desc' |
+        grep -o 'https://wallhaven.cc/w/[^"]*' | shuf | head -1)
+
+    wget -qO photo.jpg $(curl -s $WALLURL | grep -o 'https://w.wallhaven.cc/full/.*/.*.jpg' | head -1)
+
+}
+
+wallist() {
+    wget -qO photo.jpg $(curl -s 'https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt' | shuf | head -1)
+}
+
 bingwallpaper() {
     curl $(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)') >photo.jpg
 }
 
 instantoverlay() {
     [ -e overlay.png ] || wget -q "https://raw.githubusercontent.com/instantOS/instantLOGO/master/wallpaper/overlay.png"
+}
+
+randomwallpaper() {
+    array[0]="googlewallpaper"
+    array[1]="bingwallpaper"
+    array[2]="wallist"
+    array[3]="wallhaven"
+
+    size=${#array[@]}
+    index=$(($RANDOM % $size))
+    WALLCOMMAND=${array[$index]}
+    echo $WALLCOMMAND
+    $WALLCOMMAND
 }
 
 imgresize() {
@@ -69,9 +94,25 @@ fi
 genwallpaper() {
     feh --bg-scale default/$(getinstanttheme).png
     if [ -n "$1" ]; then
-        randomwallpaper
+        case "$1" in
+        bing)
+            bingwallpaper
+            ;;
+        haven)
+            wallhaven
+            ;;
+        list)
+            wallist
+            ;;
+        google)
+            googlewallpaper
+            ;;
+        *)
+            randomwallpaper
+            ;;
+        esac
     else
-        RANDOMM=$(eval '((RANDOM%2))') && ((RANDOMM == 0)) && CMD='randomwallpaper' || CMD='bingwallpaper' && $CMD
+        randomwallpaper
     fi
 
     instantoverlay
