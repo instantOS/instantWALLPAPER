@@ -4,6 +4,11 @@
 ## chromecast like wallpaper changer ##
 #######################################
 
+if ! timeout 10 ping -c 1 google.com &>/dev/null; then
+    echo "an internet connection is required"
+    exit
+fi
+
 source ~/paperbenni/import.sh || source <(curl -Ls https://git.io/JerLG)
 pb instantos
 
@@ -41,7 +46,7 @@ wallist() {
 }
 
 bingwallpaper() {
-    curl $(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)') >photo.jpg
+    wget -qO photo.jpg $(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')
 }
 
 instantoverlay() {
@@ -65,6 +70,11 @@ imgresize() {
     IMGRES=$(identify "$1" | grep -o '[0-9][0-9]*x[0-9][0-9]*' | sort -u | head -1)
     if [ $IMGRES = "$2" ]; then
         echo "image already resized"
+        if [ -n "$3" ]; then
+            if ! [ -e "$3" ]; then
+                cp $1 $3
+            fi
+        fi
         return 0
     fi
     mv "$1" "${1%.*}.1.png"
@@ -129,7 +139,7 @@ genwallpaper() {
 }
 
 if [ -n "$1" ]; then
-    genwallpaper google
+    genwallpaper "$1"
 elif ! [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
     genwallpaper
 else
