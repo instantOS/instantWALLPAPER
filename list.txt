@@ -20,3 +20,4 @@ http://512pixels.net/downloads/macos-wallpapers/10-12.jpg
 https://512pixels.net/downloads/macos-wallpapers/10-13.jpg
 https://i0.wp.com/512pixels.net/wp-content/uploads/2019/10/10-15-2-Morning.jpg
 http://512pixels.net/downloads/macos-wallpapers/10-9.jpg
+https://raw.githubusercontent.com/ilovecookieee/Glorious-Dotfiles/master/config/awesome/floppy/theme/wallpapers/night-wallpaper.jpg

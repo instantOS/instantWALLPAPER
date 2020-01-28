@@ -4,11 +4,12 @@
 ## instantos wallpaper generator ##
 ###################################
 
-if ! timeout 10 ping -c 1 google.com &>/dev/null; then
+if [ $1 = "offline" ] || ! timeout 10 ping -c 1 google.com &>/dev/null; then
     echo "offlinewall"
     if ! [ -e ~/instantos/wallpapers/ ]; then
         exit
     fi
+    
     cd ~/instantos/wallpapers/
 
     setwallpaper() {
