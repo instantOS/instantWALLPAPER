@@ -1,17 +1,33 @@
 #!/bin/bash
 
-#######################################
-## chromecast like wallpaper changer ##
-#######################################
+###################################
+## instantos wallpaper generator ##
+###################################
 
 if ! timeout 10 ping -c 1 google.com &>/dev/null; then
-    echo "an internet connection is required"
+    echo "offlinewall"
+    if ! [ -e ~/instantos/wallpapers/ ]; then
+        exit
+    fi
+    cd ~/instantos/wallpapers/
+
+    setwallpaper() {
+        if [ -e "$1" ]; then
+            feh --bg-scale "$1"
+            exit
+        fi
+    }
+
+    setwallpaper instantwallpaper.png
+    setwallpaper default/$(cat ../themes/config).png
+    setwallpaper /opt/instantos/wallpapers/default.png
     exit
 fi
 
 source ~/paperbenni/import.sh || source <(curl -Ls https://git.io/JerLG)
 pb instantos
 
+cd
 mkdir -p $HOME/instantos/wallpapers/default &>/dev/null
 cd $HOME/instantos/wallpapers
 
