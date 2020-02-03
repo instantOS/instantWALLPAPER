@@ -25,7 +25,7 @@ if [ ".$1" = ".offline" ] || ! timeout 10 ping -c 1 google.com &>/dev/null; then
     exit
 fi
 
-source ~/paperbenni/import.sh || source <(curl -Ls https://git.io/JerLG)
+source /usr/share/paperbash/import.sh || source <(curl -Ls https://git.io/JerLG)
 pb instantos
 
 cd
