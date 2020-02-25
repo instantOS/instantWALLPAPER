@@ -33,6 +33,11 @@ bingwallpaper() {
     wget -qO photo.jpg $(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')
 }
 
+viviwall() {
+    LINK=$(curl -s https://github.com/instantOS/wallpapers/tree/master/wallpapers | grep -o 'wall[0-9]*\.jpg' | sort -u | shuf | head -1)
+    wget -qO photo.jpg "$LINK"
+}
+
 # default mono colored logo wallpaper
 defaultwall() {
     instantoverlay
