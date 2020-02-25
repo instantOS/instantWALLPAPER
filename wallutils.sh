@@ -6,6 +6,15 @@
 
 RAW="https://raw.githubusercontent.com/instantOS/instantLOGO/master"
 
+setupres() {
+    if [ -e ~/instantos/monitor/max.txt ] && grep -q '....' ~/instantos/monitor/max.txt; then
+        export RESOLUTION=$(head -1 ~/instantos/monitor/max.txt)
+    else
+        export RESOLUTION="1920x1080"
+    fi
+}
+
+setupres
 # resize an image using imagemagick
 imgresize() {
     IMGRES=$(identify "$1" | grep -o '[0-9][0-9]*x[0-9][0-9]*' | sort -u | head -1)
@@ -31,6 +40,36 @@ instantoverlay() {
 # bing daily photo
 bingwallpaper() {
     wget -qO photo.jpg $(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')
+}
+
+googlewallpaper() {
+    if curl google.com &>/dev/null; then
+        url='https://storage.googleapis.com/chromeos-wallpaper-public'
+
+        fetch() {
+            IFS='<' read -a array <<<"$(wget -O - -q "$url")"
+            for field in "${array[@]}"; do
+                if [[ "$field" == *_resolution.jpg ]]; then
+                    IFS='>' read -a key <<<"$field"
+                    printf "%s\n" "${key[1]}"
+                fi
+            done
+        }
+
+        wget -qO photo.jpg "$url/$(fetch | shuf -n 1)"
+    fi
+}
+
+wallhaven() {
+    WALLURL=$(curl -Ls 'https://wallhaven.cc/search?q=id%3A711&categories=111&purity=100&sorting=random&order=desc' |
+        grep -o 'https://wallhaven.cc/w/[^"]*' | shuf | head -1)
+
+    wget -qO photo.jpg $(curl -s $WALLURL | grep -o 'https://w.wallhaven.cc/full/.*/.*.jpg' | head -1)
+
+}
+
+wallist() {
+    wget -qO photo.jpg $(curl -s 'https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt' | shuf | head -1)
 }
 
 viviwall() {
