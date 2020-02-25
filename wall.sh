@@ -4,6 +4,8 @@
 ## instantos wallpaper generator ##
 ###################################
 
+source /usr/share/instantwallpaper/wallutils.sh
+
 if [ ".$1" = ".offline" ] || ! timeout 10 ping -c 1 google.com &>/dev/null; then
     echo "offlinewall"
     if ! [ -e ~/instantos/wallpapers/ ]; then
@@ -62,14 +64,6 @@ wallist() {
     wget -qO photo.jpg $(curl -s 'https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt' | shuf | head -1)
 }
 
-bingwallpaper() {
-    wget -qO photo.jpg $(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')
-}
-
-instantoverlay() {
-    [ -e overlay.png ] || wget -q "https://raw.githubusercontent.com/instantOS/instantLOGO/master/wallpaper/overlay.png"
-}
-
 randomwallpaper() {
     array[0]="googlewallpaper"
     array[1]="bingwallpaper"
@@ -83,22 +77,6 @@ randomwallpaper() {
     $WALLCOMMAND
 }
 
-imgresize() {
-    IMGRES=$(identify "$1" | grep -o '[0-9][0-9]*x[0-9][0-9]*' | sort -u | head -1)
-    if [ $IMGRES = "$2" ]; then
-        echo "image already resized"
-        if [ -n "$3" ]; then
-            if ! [ -e "$3" ]; then
-                cp $1 $3
-            fi
-        fi
-        return 0
-    fi
-    mv "$1" "${1%.*}.1.png"
-    convert "${1%.*}.1.png" -alpha on -background none -gravity center -resize $2^ -gravity center -extent $2 ${3:-$1}
-    rm "${1%.*}.1.png"
-}
-
 instantoverlay
 
 if [ -e ~/instantos/monitor/max.txt ] && grep -q '....' ~/instantos/monitor/max.txt; then
@@ -110,13 +88,10 @@ fi
 if ! [ -e ./default/$(getinstanttheme).png ]; then
     echo "generating default wallpaper"
     cd default
-    instantoverlay
-    imgresize overlay.png $RESOLUTION
-    convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
-    convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$(getinstanttheme)".png
-    rm color.png
+    defaultwall
     cd ..
 fi
+
 
 genwallpaper() {
     feh --bg-scale default/$(getinstanttheme).png
@@ -142,17 +117,7 @@ genwallpaper() {
         randomwallpaper
     fi
 
-    instantoverlay
-    echo "RESOLUTION $RESOLUTION"
-    imgresize photo.jpg $RESOLUTION wall.png
-    imgresize overlay.png $RESOLUTION
-
-    convert wall.png -channel RGB -negate invert.png
-    convert overlay.png invert.png -compose Multiply -composite out.png
-    composite out.png wall.png instantwallpaper.png
-    rm wall.png
-    rm invert.png
-    rm out.png
+    compwallpaper
 }
 
 if [ -n "$1" ]; then
