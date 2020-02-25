@@ -6,6 +6,7 @@
 
 source /usr/share/instantwallpaper/wallutils.sh
 
+# fetch monitor resolution
 setupres
 
 if [ ".$1" = ".offline" ] || ! timeout 10 ping -c 1 google.com &>/dev/null; then
@@ -16,6 +17,8 @@ if [ ".$1" = ".offline" ] || ! timeout 10 ping -c 1 google.com &>/dev/null; then
 
     cd ~/instantos/wallpapers/
 
+    # work through a list of fallback wallpapers
+    # exit if one of them is found
     setwallpaper() {
         if [ -e "$1" ]; then
             feh --bg-scale "$1"
@@ -41,6 +44,7 @@ randomwallpaper() {
     array[1]="bingwallpaper"
     array[2]="wallist"
     array[3]="wallhaven"
+    array[4]="viviwall"
 
     size=${#array[@]}
     index=$(($RANDOM % $size))
@@ -79,6 +83,9 @@ genwallpaper() {
             ;;
         google)
             googlewallpaper
+            ;;
+        vk)
+            viviwall
             ;;
         *)
             randomwallpaper
