@@ -5,6 +5,9 @@
 </div>
 
 --------  
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eed7ed06ca9446bda1a7004bdfce7dcf)](https://app.codacy.com/gh/instantOS/instantWALLPAPER?utm_source=github.com&utm_medium=referral&utm_content=instantOS/instantWALLPAPER&utm_campaign=Badge_Grade_Settings)
+
 ## Requirements
   - imagemagick
   - bash
