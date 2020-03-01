@@ -36,8 +36,8 @@ source /usr/share/paperbash/import.sh || source <(curl -Ls https://git.io/JerLG)
 pb instantos
 
 cd
-mkdir -p $HOME/instantos/wallpapers/default &>/dev/null
-cd $HOME/instantos/wallpapers
+mkdir -p "$HOME"/instantos/wallpapers/default &>/dev/null
+cd "$HOME"/instantos/wallpapers
 
 randomwallpaper() {
     array[0]="googlewallpaper"

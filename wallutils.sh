@@ -64,7 +64,7 @@ wallhaven() {
     WALLURL=$(curl -Ls 'https://wallhaven.cc/search?q=id%3A711&categories=111&purity=100&sorting=random&order=desc' |
         grep -o 'https://wallhaven.cc/w/[^"]*' | shuf | head -1)
 
-    wget -qO photo.jpg $(curl -s $WALLURL | grep -o 'https://w.wallhaven.cc/full/.*/.*.jpg' | head -1)
+    wget -qO photo.jpg $(curl -s "$WALLURL" | grep -o 'https://w.wallhaven.cc/full/.*/.*.jpg' | head -1)
 
 }
 
@@ -80,7 +80,7 @@ viviwall() {
 # default mono colored logo wallpaper
 defaultwall() {
     instantoverlay
-    imgresize overlay.png $RESOLUTION
+    imgresize overlay.png "$RESOLUTION"
     convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
     convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$(getinstanttheme)".png
     rm color.png
@@ -92,8 +92,8 @@ compwallpaper() {
 
     instantoverlay
     echo "RESOLUTION $RESOLUTION"
-    imgresize ${1:-photo.jpg} $RESOLUTION wall.png
-    imgresize overlay.png $RESOLUTION
+    imgresize "${1:-photo.jpg}" "$RESOLUTION" wall.png
+    imgresize overlay.png "$RESOLUTION"
 
     convert wall.png -channel RGB -negate invert.png
     convert overlay.png invert.png -compose Multiply -composite out.png

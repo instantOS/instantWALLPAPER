@@ -6,8 +6,8 @@
 
 --------  
 ## Requirements
- - imagemagick
- - bash
- - wget
+  - imagemagick
+  - bash
+  - wget
 
 ### instantOS is still in early beta, contributions always welcome
