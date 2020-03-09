@@ -55,11 +55,7 @@ randomwallpaper() {
 
 instantoverlay
 
-if [ -e ~/instantos/monitor/max.txt ] && grep -q '....' ~/instantos/monitor/max.txt; then
-    export RESOLUTION=$(head -1 ~/instantos/monitor/max.txt)
-else
-    export RESOLUTION="1920x1080"
-fi
+export RESOLUTION=$(iconf max:1920x1080)
 
 if ! [ -e ./default/$(getinstanttheme).png ]; then
     echo "generating default wallpaper"
@@ -72,19 +68,19 @@ genwallpaper() {
     feh --bg-scale default/$(getinstanttheme).png
     if [ -n "$1" ]; then
         case "$1" in
-        bing)
+        b*)
             bingwallpaper
             ;;
-        haven)
+        h*)
             wallhaven
             ;;
-        list)
+        l*)
             wallist
             ;;
-        google)
+        g*)
             googlewallpaper
             ;;
-        vk)
+        v*)
             viviwall
             ;;
         *)

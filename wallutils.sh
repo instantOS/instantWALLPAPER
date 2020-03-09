@@ -7,11 +7,7 @@
 RAW="https://raw.githubusercontent.com/instantOS/instantLOGO/master"
 
 setupres() {
-    if [ -e ~/instantos/monitor/max.txt ] && grep -q '....' ~/instantos/monitor/max.txt; then
-        export RESOLUTION=$(head -1 ~/instantos/monitor/max.txt)
-    else
-        export RESOLUTION="1920x1080"
-    fi
+    export RESOLUTION=$(iconf max:1920x1080)
 }
 
 setupres
