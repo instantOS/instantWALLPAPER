@@ -70,7 +70,7 @@ wallist() {
 
 viviwall() {
     LINK=$(curl -s https://github.com/instantOS/wallpapers/tree/master/wallpapers | grep -o 'wall[0-9]*\.jpg' | sort -u | shuf | head -1)
-    wget -qO photo.jpg "$LINK"
+    wget -qO photo.jpg "https://raw.githubusercontent.com/instantOS/wallpapers/master/wallpapers/$LINK"
 }
 
 # default mono colored logo wallpaper
