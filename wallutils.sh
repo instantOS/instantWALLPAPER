@@ -14,7 +14,7 @@ setupres
 # resize an image using imagemagick
 imgresize() {
     IMGRES=$(identify "$1" | grep -o '[0-9][0-9]*x[0-9][0-9]*' | sort -u | head -1)
-    if [ $IMGRES = "$2" ]; then
+    if [ "$IMGRES" = "$2" ]; then
         echo "image already resized"
         if [ -n "$3" ]; then
             if ! [ -e "$3" ]; then
