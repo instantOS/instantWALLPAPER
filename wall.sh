@@ -10,15 +10,9 @@ source /usr/share/instantwallpaper/wallutils.sh
 setupres
 
 # allow setting a custom image as a wallpaper
-if [ -e ~/instantos/wallpapers/custom.png ]; then
-    cd ~/instantos/wallpapers
-    imgresize custom.png "$RESOLUTION"
-    feh --bg-scale custom.png
-    exit
-fi
-
 if [ "$1" = "set" ] && [ -n "$2" ]; then
     if [ -e "$2" ] && identify "$2"; then
+        rm ~/instantos/wallpapers/custom.png
         mkdir -p ~/instantos/wallpapers &>/dev/null
         cp "$2" ~/instantos/wallpapers/custom.png
         instantwallpaper
@@ -27,6 +21,13 @@ if [ "$1" = "set" ] && [ -n "$2" ]; then
         echo "$2 is not an image"
         exit 1
     fi
+fi
+
+if [ -e ~/instantos/wallpapers/custom.png ]; then
+    cd ~/instantos/wallpapers
+    imgresize custom.png "$RESOLUTION"
+    feh --bg-scale custom.png
+    exit
 fi
 
 if [ ".$1" = ".offline" ] || ! timeout 10 ping -c 1 google.com &>/dev/null; then
