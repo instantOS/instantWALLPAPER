@@ -86,15 +86,21 @@ defaultwall() {
 # put the logo onto a wallpaper
 compwallpaper() {
 
-    instantoverlay
     echo "RESOLUTION $RESOLUTION"
     imgresize "${1:-photo.jpg}" "$RESOLUTION" wall.png
-    imgresize overlay.png "$RESOLUTION"
 
-    convert wall.png -channel RGB -negate invert.png
-    convert overlay.png invert.png -compose Multiply -composite out.png
-    composite out.png wall.png instantwallpaper.png
-    rm wall.png
-    rm invert.png
-    rm out.png
+    # the logo is optional
+    if ! iconf -i nologo; then
+        instantoverlay
+        imgresize overlay.png "$RESOLUTION"
+        convert wall.png -channel RGB -negate invert.png
+        convert overlay.png invert.png -compose Multiply -composite out.png
+        composite out.png wall.png instantwallpaper.png
+        rm wall.png
+        rm invert.png
+        rm out.png
+    else
+        echo "logo disabled"
+        mv wall.png instantwallpaper.png
+    fi
 }

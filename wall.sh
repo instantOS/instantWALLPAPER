@@ -9,6 +9,18 @@ source /usr/share/instantwallpaper/wallutils.sh
 # fetch monitor resolution
 setupres
 
+# allow deleting custom wallpaper
+if [ "$1" = clear ]; then
+    if [ -e ~/instantos/wallpapers/custom.png ]; then
+        echo "clearing custom wallpaper"
+        rm ~/instantos/wallpapers/custom.png
+        instantwallpaper
+    else
+        echo "no custom wallpaper was found"
+    fi
+    exit
+fi
+
 # allow setting a custom image as a wallpaper
 if [ "$1" = "set" ] && [ -n "$2" ]; then
     if [ -e "$2" ] && identify "$2"; then
@@ -122,6 +134,7 @@ elif ! [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
 else
     if date +%A | grep -Ei '(Wednesday|Mittwoch)'; then
         if ! [ -e ~/instantos/wallpapers/wednesday ]; then
+            echo "it is wallpaper wednesday my dudes"
             genwallpaper
             touch ~/instantos/wallpapers/wednesday
         else
