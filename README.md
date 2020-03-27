@@ -19,9 +19,9 @@ it should work on all WMs that support feh to set a background. It does depend o
 ### CLI usage:
 
 set a custom wallpaper on instantOS
-´´´
+```
 instantwallpaper set myimage.png
-´´´
+```
 
 clear custom wallpaper and return to instantWALLPAPER
 ```
