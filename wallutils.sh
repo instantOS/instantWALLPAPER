@@ -13,6 +13,15 @@ setupres() {
 setupres
 # resize an image using imagemagick
 imgresize() {
+    if file "$1" | grep -q "image data"; then
+        echo "image found"
+    else
+        echo "$1 is not an image"
+        ping -c 1 google.com || exit 1
+        instantwallpaper w
+        exit
+    fi
+
     IMGRES=$(identify "$1" | grep -o '[0-9][0-9]*x[0-9][0-9]*' | sort -u | head -1)
     if [ "$IMGRES" = "$2" ]; then
         echo "image already resized"
@@ -75,7 +84,7 @@ defaultwall() {
 compwallpaper() {
 
     echo "RESOLUTION $RESOLUTION"
-    imgresize "${1:-photo.jpg}" "$RESOLUTION" wall.png
+    imgresize "${1:-photo.jpg}" "$RESOLUTION" wall.png || return 1
 
     # the logo is optional
     if ! iconf -i nologo; then
