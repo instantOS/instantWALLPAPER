@@ -21,9 +21,29 @@ if [ "$1" = clear ]; then
     exit
 fi
 
+if [ "$1" = "gui" ]; then
+    WALLPATH="$(zenity --file-selection --file-filter='Image files (png, jpg) | *.png *.jpg')"
+
+    if [ -z "$WALLPATH" ]; then
+        echo "no wallpaper chosen"
+        exit
+    fi
+
+    if file "$WALLPATH" | grep -q 'image data'; then
+        echo "image found"
+    else
+        echo "not an image"
+        exit 1
+    fi
+
+    instantwallpaper set "$WALLPATH"
+
+    exit
+fi
+
 # allow setting a custom image as a wallpaper
 if [ "$1" = "set" ] && [ -n "$2" ]; then
-    if [ -e "$2" ] && identify "$2"; then
+    if [ -e "$2" ] && file "$2" | grep -q "image data"; then
         rm ~/instantos/wallpapers/custom.png
         mkdir -p ~/instantos/wallpapers &>/dev/null
         cp "$2" ~/instantos/wallpapers/custom.png
