@@ -40,7 +40,7 @@ bingwallpaper() {
 
 googlewallpaper() {
     LINK="$(curl -s https://raw.githubusercontent.com/dconnolly/chromecast-backgrounds/master/README.md |
-        shuf | head -1 | sed 's/!\[\](\([^)]*\))/\1/g')"
+        shuf | head -1 | grep -o 'http[^ )]*')"
     wget -qO photo.jpg "$LINK"
 }
 
