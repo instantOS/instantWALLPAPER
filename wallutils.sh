@@ -39,21 +39,9 @@ bingwallpaper() {
 }
 
 googlewallpaper() {
-    if curl google.com &>/dev/null; then
-        url='https://storage.googleapis.com/chromeos-wallpaper-public'
-
-        fetch() {
-            IFS='<' read -a array <<<"$(wget -O - -q "$url")"
-            for field in "${array[@]}"; do
-                if [[ "$field" == *_resolution.jpg ]]; then
-                    IFS='>' read -a key <<<"$field"
-                    printf "%s\n" "${key[1]}"
-                fi
-            done
-        }
-
-        wget -qO photo.jpg "$url/$(fetch | shuf -n 1)"
-    fi
+    LINK="$(curl -s https://raw.githubusercontent.com/dconnolly/chromecast-backgrounds/master/README.md |
+        shuf | head -1 | sed 's/!\[\](\([^)]*\))/\1/g')"
+    wget -qO photo.jpg "$LINK"
 }
 
 wallhaven() {
