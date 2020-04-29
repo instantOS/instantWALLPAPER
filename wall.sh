@@ -142,6 +142,9 @@ genwallpaper() {
         esac
     else
         randomwallpaper
+        if [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
+            oldsum="$(md5sum ~/instantos/wallpapers/instantwallpaper.png | awk '{ print $1 }')"
+        fi
     fi
 
     compwallpaper
@@ -170,6 +173,14 @@ fi
 
 if [ -z "$3" ]; then
     feh --bg-scale instantwallpaper.png
+    if [ -n "$oldsum" ]; then
+        newsum="$(md5sum ~/instantos/wallpapers/instantwallpaper.png | awk '{ print $1 }')"
+        if [ "$newsum" = "$oldsum" ]; then
+            ping -c 1 google.com || exit 1
+            instantwallpaper w
+            sleep 20
+        fi
+    fi
 else
     echo "feh silenced"
 fi
