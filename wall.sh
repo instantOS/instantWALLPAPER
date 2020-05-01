@@ -58,7 +58,7 @@ fi
 if [ -e ~/instantos/wallpapers/custom.png ]; then
     cd ~/instantos/wallpapers
     imgresize custom.png "$RESOLUTION"
-    feh --bg-scale custom.png
+    ifeh custom.png
     exit
 fi
 
@@ -74,7 +74,7 @@ if [ ".$1" = ".offline" ] || ! timeout 10 ping -c 1 google.com &>/dev/null; then
     # exit if one of them is found
     setwallpaper() {
         if [ -e "$1" ]; then
-            feh --bg-scale "$1"
+            ifeh "$1"
             exit
         fi
     }
@@ -118,7 +118,7 @@ if ! [ -e ./default/$(getinstanttheme).png ]; then
 fi
 
 genwallpaper() {
-    feh --bg-scale default/$(getinstanttheme).png
+    ifeh default/$(getinstanttheme).png
     if [ -n "$1" ]; then
         case "$1" in
         b*)
@@ -172,7 +172,7 @@ else
 fi
 
 if [ -z "$3" ]; then
-    feh --bg-scale instantwallpaper.png
+    ifeh instantwallpaper.png
     if [ -n "$oldsum" ]; then
         newsum="$(md5sum ~/instantos/wallpapers/instantwallpaper.png | awk '{ print $1 }')"
         if [ "$newsum" = "$oldsum" ]; then
