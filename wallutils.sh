@@ -17,7 +17,7 @@ imgresize() {
         echo "image found"
     else
         echo "$1 is not an image"
-        ping -c 1 google.com || exit 1
+        curl -s google.com || exit 1
         instantwallpaper w
         exit
     fi

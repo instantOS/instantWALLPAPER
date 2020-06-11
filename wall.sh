@@ -62,7 +62,7 @@ if [ -e ~/instantos/wallpapers/custom.png ]; then
     exit
 fi
 
-if [ ".$1" = ".offline" ] || ! timeout 10 ping -c 1 google.com &>/dev/null; then
+if [ ".$1" = ".offline" ] || ! timeout 10 curl google.com &>/dev/null; then
     echo "offlinewall"
     if ! [ -e ~/instantos/wallpapers/ ]; then
         exit
@@ -176,7 +176,7 @@ if [ -z "$3" ]; then
     if [ -n "$oldsum" ]; then
         newsum="$(md5sum ~/instantos/wallpapers/instantwallpaper.png | awk '{ print $1 }')"
         if [ "$newsum" = "$oldsum" ]; then
-            ping -c 1 google.com || exit 1
+            curl -s google.com || exit 1
             instantwallpaper w
             sleep 20
         fi
