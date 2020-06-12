@@ -14,6 +14,7 @@ clear)
     if [ -e ~/instantos/wallpapers/custom.png ]; then
         echo "clearing custom wallpaper"
         rm ~/instantos/wallpapers/custom.png
+        rm -rf ~/.config/nitrogen
         instantwallpaper
     else
         echo "no custom wallpaper was found"
@@ -64,6 +65,15 @@ if [ -e ~/instantos/wallpapers/custom.png ]; then
     imgresize custom.png "$RESOLUTION"
     ifeh custom.png
     exit
+fi
+
+# allow manually overriding wallpaper with nitrogen
+if [ -e ~/.config/nitrogen/bg-saved.cfg ]; then
+    if ! grep '/home/.*/instantos/wallpapers/' ~/.config/nitrogen/bg-saved.cfg; then
+        echo "using nitrogen wallpaper"
+        nitrogen --restore
+        exit
+    fi
 fi
 
 source /usr/share/paperbash/import.sh || source <(curl -Ls https://git.io/JerLG)
