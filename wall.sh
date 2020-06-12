@@ -12,7 +12,7 @@ setupres
 if ! [ -e "$(xdg-user-dir PICTURES)/wallpapers/readme.txt" ]; then
     echo "setting up readme"
     mkdir -p "$(xdg-user-dir PICTURES)/wallpapers"
-    cp /usr/share/instantwallpaper/readme.png "$(xdg-user-dir PICTURES)"/wallpapers/readme.png
+    cp /usr/share/backgrounds/readme.png "$(xdg-user-dir PICTURES)"/wallpapers/readme.png
     echo "wallpapers are not preinstalled by default to reduce installation size
 you can installl them by running
 instantwallpaper fetch" >"$(xdg-user-dir PICTURES)"/wallpapers/readme.txt
