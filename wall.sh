@@ -67,6 +67,7 @@ offline)
     ;;
 fetch)
     fetchwallpapers
+    exit
     ;;
 select)
     if ! [ -e "$(xdg-user-dir PICTURES)"/wallpapers/10.jpg ]; then
@@ -75,6 +76,7 @@ select)
         echo "wallpapers already downloaded"
     fi
     nitrogen "$(xdg-user-dir PICTURES)"/wallpapers/
+    exit
     ;;
 esac
 
