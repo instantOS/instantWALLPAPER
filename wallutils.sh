@@ -124,3 +124,31 @@ fallbackwallpaper() {
     setwallpaper /opt/instantos/wallpapers/default.png
     exit
 }
+
+# predownload all list wallpapers
+fetchwallpapers() {
+    if ! [ -e "$(xdg-user-dir PICTURES)/wallpapers" ]; then
+        mkdir -p "$(xdg-user-dir PICTURES)/wallpapers"
+    fi
+    cd "$(xdg-user-dir PICTURES)/wallpapers"
+
+    if [ "$(ls | wc -l)" -gt 6 ]; then
+        echo "wallpapers already downloaded"
+        echo "remove $(xdg-user-dir PICTURES)/wallpapers to redownload them"
+        exit
+    fi
+
+    if ! checkinternet; then
+        echo "internet it required"
+        notify-send "internet it required to fetch wallpapers"
+        exit
+    fi
+
+    curl -s https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt | grep -v '512pixels.net' >/tmp/instantwallpaperlist
+    WALLCOUNTER=0
+    while read p; do
+        WALLCOUNTER="$(expr $WALLCOUNTER + 1)"
+        echo "Downloading wallpaper $WALLCOUNTER"
+        wget -qO "$WALLCOUNTER.jpg" "$p"
+    done </tmp/instantwallpaperlist
+}

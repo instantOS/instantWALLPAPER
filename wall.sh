@@ -56,7 +56,11 @@ set)
 offline)
     fallbackwallpaper
     ;;
+fetch)
+    fetchwallpapers
+    ;;
 esac
+
 ! checkinternet && fallbackwallpaper && exit
 
 # detect custom wallpaper from elsewhere
