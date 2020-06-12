@@ -69,10 +69,12 @@ fi
 
 # allow manually overriding wallpaper with nitrogen
 if [ -e ~/.config/nitrogen/bg-saved.cfg ]; then
-    if ! grep '/home/.*/instantos/wallpapers/' ~/.config/nitrogen/bg-saved.cfg; then
-        echo "using nitrogen wallpaper"
-        nitrogen --restore
-        exit
+    if [ -z "$1" ] || grep -q 'offline' <<<"$1"; then
+        if ! grep '/home/.*/instantos/wallpapers/' ~/.config/nitrogen/bg-saved.cfg; then
+            echo "using nitrogen wallpaper"
+            nitrogen --restore
+            exit
+        fi
     fi
 fi
 
