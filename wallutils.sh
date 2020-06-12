@@ -70,14 +70,13 @@ viviwall() {
     wget -qO photo.jpg "https://raw.githubusercontent.com/instantOS/wallpapers/master/wallpapers/$LINK"
 }
 
-# default mono colored logo wallpaper
+# generate default mono colored logo wallpaper
 defaultwall() {
     instantoverlay
     imgresize overlay.png "$RESOLUTION"
     convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
     convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$(getinstanttheme)".png
     rm color.png
-
 }
 
 # put the logo onto a wallpaper
@@ -100,4 +99,28 @@ compwallpaper() {
         echo "logo disabled"
         mv wall.png instantwallpaper.png
     fi
+}
+
+# work through a list of fallback wallpapers
+# exit if one of them is found
+fallbackwallpaper() {
+    echo "offlinewall"
+    if ! [ -e ~/instantos/wallpapers/ ]; then
+        exit
+    fi
+
+    cd ~/instantos/wallpapers/
+
+    setwallpaper() {
+        if [ -e "$1" ]; then
+            ifeh "$1"
+            exit
+        fi
+    }
+
+    setwallpaper custom.png
+    setwallpaper instantwallpaper.png
+    setwallpaper default/$(cat ../themes/config).png
+    setwallpaper /opt/instantos/wallpapers/default.png
+    exit
 }
