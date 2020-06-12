@@ -9,6 +9,15 @@ source /usr/share/instantwallpaper/wallutils.sh
 # fetch monitor resolution
 setupres
 
+if ! [ -e "$(xdg-user-dir PICTURES)/wallpapers/readme.txt" ]; then
+    echo "setting up readme"
+    mkdir -p "$(xdg-user-dir PICTURES)/wallpapers"
+    cp /usr/share/instantwallpaper/readme.png "$(xdg-user-dir PICTURES)"/wallpapers/readme.png
+    echo "wallpapers are not preinstalled by default to reduce installation size
+you can installl them by running
+instantwallpaper fetch" >"$(xdg-user-dir PICTURES)"/wallpapers/readme.txt
+fi
+
 case "$1" in
 clear)
     if [ -e ~/instantos/wallpapers/custom.png ]; then
@@ -58,6 +67,14 @@ offline)
     ;;
 fetch)
     fetchwallpapers
+    ;;
+select)
+    if ! [ -e "$(xdg-user-dir PICTURES)"/wallpapers/10.jpg ]; then
+        st -e bash -c "instantwallpaper fetch"
+    else
+        echo "wallpapers already downloaded"
+    fi
+    nitrogen "$(xdg-user-dir PICTURES)"/wallpapers/
     ;;
 esac
 
