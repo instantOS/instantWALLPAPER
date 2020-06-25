@@ -27,7 +27,7 @@ imgresize() {
         echo "image already resized"
         if [ -n "$3" ]; then
             if ! [ -e "$3" ]; then
-                cp $1 $3
+                cp "$1" "$3"
             fi
         fi
         return 0
@@ -147,7 +147,7 @@ fetchwallpapers() {
     curl -s https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt | grep -v '512pixels.net' >/tmp/instantwallpaperlist
     WALLCOUNTER=0
     while read p; do
-        WALLCOUNTER="$(expr $WALLCOUNTER + 1)"
+        WALLCOUNTER="$(($WALLCOUNTER + 1))"
         echo "Downloading wallpaper $WALLCOUNTER"
         wget -qO "$WALLCOUNTER.jpg" "$p"
     done </tmp/instantwallpaperlist

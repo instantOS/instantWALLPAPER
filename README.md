@@ -16,7 +16,7 @@ On instantOS, a new wallpaper is automatically generated every "wallpaper-wednes
 to set a custom wallpaper
 it should work on all WMs that support feh to set a background. It does depend on instantWM and instantutils to use all features though
 
-### CLI usage:
+### CLI usage
 
 set a custom wallpaper on instantOS
 ```
