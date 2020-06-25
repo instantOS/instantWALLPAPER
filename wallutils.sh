@@ -33,7 +33,8 @@ imgresize() {
         return 0
     fi
     mv "$1" "${1%.*}.1.png"
-    convert "${1%.*}.1.png" -alpha on -background none -gravity center -resize $2^ -gravity center -extent $2 ${3:-$1}
+    convert "${1%.*}.1.png" -alpha on -background none \
+        -gravity center -resize "$2^" -gravity center -extent "$2" "${3:-$1}"
     rm "${1%.*}.1.png"
 }
 
@@ -44,7 +45,7 @@ instantoverlay() {
 
 # bing daily photo
 bingwallpaper() {
-    wget -qO photo.jpg $(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')
+    wget -qO photo.jpg "$(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')"
 }
 
 googlewallpaper() {
@@ -57,16 +58,16 @@ wallhaven() {
     WALLURL=$(curl -Ls 'https://wallhaven.cc/search?q=id%3A711&categories=111&purity=100&sorting=random&order=desc' |
         grep -o 'https://wallhaven.cc/w/[^"]*' | shuf | head -1)
 
-    wget -qO photo.jpg $(curl -s "$WALLURL" | grep -o 'https://w.wallhaven.cc/full/.*/.*.jpg' | head -1)
+    wget -qO photo.jpg "$(curl -s "$WALLURL" | grep -o 'https://w.wallhaven.cc/full/.*/.*.jpg' | head -1)"
 
 }
 
 wallist() {
-    wget -qO photo.jpg $(curl -s 'https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt' | shuf | head -1)
+    wget -qO photo.jpg "$(curl -s 'https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt' | shuf | head -1)"
 }
 
 viviwall() {
-    LINK=$(curl -s https://github.com/instantOS/wallpapers/tree/master/wallpapers | grep -o 'wall[0-9]*\.jpg' | sort -u | shuf | head -1)
+    LINK="$(curl -s https://github.com/instantOS/wallpapers/tree/master/wallpapers | grep -o 'wall[0-9]*\.jpg' | sort -u | shuf | head -1)"
     wget -qO photo.jpg "https://raw.githubusercontent.com/instantOS/wallpapers/master/wallpapers/$LINK"
 }
 
@@ -120,7 +121,7 @@ fallbackwallpaper() {
 
     setwallpaper custom.png
     setwallpaper instantwallpaper.png
-    setwallpaper default/$(cat ../themes/config).png
+    setwallpaper default/"$(cat ../themes/config)".png
     setwallpaper /opt/instantos/wallpapers/default.png
     exit
 }
@@ -147,7 +148,7 @@ fetchwallpapers() {
     curl -s https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt | grep -v '512pixels.net' >/tmp/instantwallpaperlist
     WALLCOUNTER=0
     while read p; do
-        WALLCOUNTER="$(($WALLCOUNTER + 1))"
+        WALLCOUNTER="(($WALLCOUNTER + 1))"
         echo "Downloading wallpaper $WALLCOUNTER"
         wget -qO "$WALLCOUNTER.jpg" "$p"
     done </tmp/instantwallpaperlist
