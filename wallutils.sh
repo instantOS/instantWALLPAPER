@@ -45,16 +45,19 @@ instantoverlay() {
 
 # bing daily photo
 bingwallpaper() {
+    echo "downloading bing wallpaper"
     wget -qO photo.jpg "$(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')"
 }
 
 googlewallpaper() {
+    echo "downloading wallpaper from google"
     LINK="$(curl -s https://raw.githubusercontent.com/dconnolly/chromecast-backgrounds/master/README.md |
         shuf | head -1 | grep -o 'http[^ )]*')"
     wget -qO photo.jpg "$LINK"
 }
 
 wallhaven() {
+    echo "downloading wallpaper from wallhaven"
     WALLURL=$(curl -Ls 'https://wallhaven.cc/search?q=id%3A711&categories=111&purity=100&sorting=random&order=desc' |
         grep -o 'https://wallhaven.cc/w/[^"]*' | shuf | head -1)
 
@@ -63,10 +66,12 @@ wallhaven() {
 }
 
 wallist() {
+    echo "downloading wallpaper from list"
     wget -qO photo.jpg "$(curl -s 'https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt' | shuf | head -1)"
 }
 
 viviwall() {
+    echo "vk pictures wallpaper"
     LINK="$(curl -s https://github.com/instantOS/wallpapers/tree/master/wallpapers | grep -o 'wall[0-9]*\.jpg' | sort -u | shuf | head -1)"
     wget -qO photo.jpg "https://raw.githubusercontent.com/instantOS/wallpapers/master/wallpapers/$LINK"
 }
