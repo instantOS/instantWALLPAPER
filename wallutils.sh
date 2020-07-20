@@ -40,7 +40,7 @@ imgresize() {
 
 instantoverlay() {
     [ -e overlay.png ] ||
-        wget -q "$RAW/wallpaper/overlay.png"
+        wget -q "https://media.githubusercontent.com/media/instantOS/instantLOGO/master/wallpaper/overlay.png"
 }
 
 # bing daily photo
