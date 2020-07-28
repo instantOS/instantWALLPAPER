@@ -89,6 +89,28 @@ defaultwall() {
     rm color.png
 }
 
+# checks if file is a valid image
+checkwall() {
+    if [ -e "$1" ] && file "$1" | grep -q 'image data'; then
+        echo "image found"
+        return 0
+    else
+        echo "not an image"
+        return 1
+    fi
+}
+
+# choose a wallpaper in a gui
+guiwall() {
+    WALLPATH="$(zenity --file-selection --file-filter='Image files (png, jpg) | *.png *.jpg')"
+    if [ -z "$WALLPATH" ]; then
+        echo "no wallpaper chosen"
+        exit
+    fi
+
+    checkwall "$WALLPATH" || exit 1
+}
+
 # put the logo onto a wallpaper
 compwallpaper() {
 
@@ -101,7 +123,7 @@ compwallpaper() {
         imgresize overlay.png "$RESOLUTION"
 
         # create mask from overlay
-        convert overlay.png  -alpha extract mask.png
+        convert overlay.png -alpha extract mask.png
         # cut the image with the mask
         composite -compose CopyOpacity mask.png wall.png cut.png
         # Convert to black and white the cut

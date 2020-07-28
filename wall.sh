@@ -31,19 +31,7 @@ clear)
     exit
     ;;
 gui)
-    WALLPATH="$(zenity --file-selection --file-filter='Image files (png, jpg) | *.png *.jpg')"
-    if [ -z "$WALLPATH" ]; then
-        echo "no wallpaper chosen"
-        exit
-    fi
-
-    if file "$WALLPATH" | grep -q 'image data'; then
-        echo "image found"
-    else
-        echo "not an image"
-        exit 1
-    fi
-
+    guiwall
     instantwallpaper set "$WALLPATH"
     exit
     ;;
@@ -62,6 +50,27 @@ set)
         fi
     fi
     ;;
+logo)
+    echo "setting custom image with logo as wallpaper"
+    shift 1
+
+    if [ -z "$1" ]; then
+        guiwall
+    else
+        WALLPATH="$1"
+        checkwall "$1" || exit 1
+    fi
+
+    rm -rf /tmp/logowallpaper
+    mkdir /tmp/logowallpaper
+    cp "$WALLPATH" /tmp/logowallpaper/tempwall.jpg
+    cd /tmp/logowallpaper || exit
+    compwallpaper tempwall.jpg
+    instantwallpaper set instantwallpaper.png
+    rm -rf /tmp/logowallpaper
+
+    ;;
+
 offline)
     fallbackwallpaper
     ;;
