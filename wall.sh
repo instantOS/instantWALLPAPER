@@ -50,6 +50,21 @@ set)
         fi
     fi
     ;;
+customlogo)
+    # allow setting a custom image as a logo
+    if [ -n "$2" ]; then
+        if [ -e "$2" ] && file "$2" | grep -q "image data"; then
+            rm ~/instantos/wallpapers/customlogo.png
+            mkdir -p ~/instantos/wallpapers &>/dev/null
+            cp "$2" ~/instantos/wallpapers/customlogo.png
+            ifeh ~/instantos/wallpapers/customlogo.png
+            exit
+        else
+            echo "$2 is not an image"
+            exit 1
+        fi
+    fi
+    ;;
 logo)
     echo "setting custom image with logo as wallpaper"
     shift 1

@@ -39,11 +39,15 @@ imgresize() {
 }
 
 instantoverlay() {
-    if [ -e overlay.png ] && file overlay.png | grep -iq 'image data'; then
-        return
+    if [ -e ~/instantos/wallpapers/customlogo.png ]; then
+        rsync -aP ~/instantos/wallpapers/customlogo.png ./overlay.png
     else
-        [ -e overlay.png ] && rm overlay.png
-        wget -q "https://media.githubusercontent.com/media/instantOS/instantLOGO/master/wallpaper/overlay.png"
+        if [ -e overlay.png ] && file overlay.png | grep -iq 'image data'; then
+            return
+        else
+            [ -e overlay.png ] && rm overlay.png
+            wget -q "https://media.githubusercontent.com/media/instantOS/instantLOGO/master/wallpaper/overlay.png"
+        fi
     fi
 }
 
