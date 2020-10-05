@@ -177,8 +177,10 @@ fetchwallpapers() {
     if ! [ -e "$(xdg-user-dir PICTURES)/wallpapers" ]; then
         mkdir -p "$(xdg-user-dir PICTURES)/wallpapers"
     fi
-    cd "$(xdg-user-dir PICTURES)/wallpapers"
-
+    cd "$(xdg-user-dir PICTURES)/wallpapers" || return 1
+    
+    rm readme.jpg
+    
     if [ "$(ls | wc -l)" -gt 6 ]; then
         echo "wallpapers already downloaded"
         echo "remove $(xdg-user-dir PICTURES)/wallpapers to redownload them"
