@@ -39,8 +39,16 @@ imgresize() {
 }
 
 instantoverlay() {
-    [ -e overlay.png ] ||
-        wget -q "$RAW/wallpaper/overlay.png"
+    if [ -e ~/instantos/wallpapers/customlogo.png ]; then
+        rsync -aP ~/instantos/wallpapers/customlogo.png ./overlay.png
+    else
+        if [ -e overlay.png ] && file overlay.png | grep -iq 'image data'; then
+            return
+        else
+            [ -e overlay.png ] && rm overlay.png
+            wget -q "https://media.githubusercontent.com/media/instantOS/instantLOGO/master/wallpaper/overlay.png"
+        fi
+    fi
 }
 
 # bing daily photo
@@ -85,6 +93,28 @@ defaultwall() {
     rm color.png
 }
 
+# checks if file is a valid image
+checkwall() {
+    if [ -e "$1" ] && file "$1" | grep -q 'image data'; then
+        echo "image found"
+        return 0
+    else
+        echo "not an image"
+        return 1
+    fi
+}
+
+# choose a wallpaper in a gui
+guiwall() {
+    WALLPATH="$(zenity --file-selection --file-filter='Image files (png, jpg) | *.png *.jpg')"
+    if [ -z "$WALLPATH" ]; then
+        echo "no wallpaper chosen"
+        exit
+    fi
+
+    checkwall "$WALLPATH" || exit 1
+}
+
 # put the logo onto a wallpaper
 compwallpaper() {
 
@@ -95,12 +125,23 @@ compwallpaper() {
     if ! iconf -i nologo; then
         instantoverlay
         imgresize overlay.png "$RESOLUTION"
-        convert wall.png -channel RGB -negate invert.png
-        convert overlay.png invert.png -compose Multiply -composite out.png
-        composite out.png wall.png instantwallpaper.png
+
+        # create mask from overlay
+        convert overlay.png -alpha extract mask.png
+        # cut the image with the mask
+        composite -compose CopyOpacity mask.png wall.png cut.png
+        # Convert to black and white the cut
+        # convert cut.png -colorspace Gray blackandwhite.png
+        # Negate the black and white cut
+        convert cut.png -channel RGB -negate invert.png
+        # draw the computed overlay on top of the background
+        convert wall.png invert.png -gravity center -composite instantwallpaper.png
+
         rm wall.png
+        rm mask.png
+        rm cut.png
+        rm blackandwhite.png
         rm invert.png
-        rm out.png
     else
         echo "logo disabled"
         mv wall.png instantwallpaper.png
@@ -136,8 +177,10 @@ fetchwallpapers() {
     if ! [ -e "$(xdg-user-dir PICTURES)/wallpapers" ]; then
         mkdir -p "$(xdg-user-dir PICTURES)/wallpapers"
     fi
-    cd "$(xdg-user-dir PICTURES)/wallpapers"
-
+    cd "$(xdg-user-dir PICTURES)/wallpapers" || return 1
+    
+    rm readme.jpg
+    
     if [ "$(ls | wc -l)" -gt 6 ]; then
         echo "wallpapers already downloaded"
         echo "remove $(xdg-user-dir PICTURES)/wallpapers to redownload them"
@@ -151,10 +194,10 @@ fetchwallpapers() {
     fi
 
     curl -s https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt | grep -v '512pixels.net' >/tmp/instantwallpaperlist
-    WALLCOUNTER=0
+    WALLCOUNTER=1
     while read p; do
-        WALLCOUNTER="(($WALLCOUNTER + 1))"
         echo "Downloading wallpaper $WALLCOUNTER"
         wget -qO "$WALLCOUNTER.jpg" "$p"
+        WALLCOUNTER="$((WALLCOUNTER + 1))"
     done </tmp/instantwallpaperlist
 }
