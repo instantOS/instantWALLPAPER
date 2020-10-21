@@ -224,6 +224,14 @@ if [ -z "$3" ]; then
         if [ "$newsum" = "$oldsum" ]; then
             echo "regenerating failed wallpaper"
             checkinternet || exit 1
+
+            WALLCOUNT="$(pgrep -f instantwallpaper | wc -l)"
+
+            if [ "$WALLCOUNT" -gt 80 ]
+            then
+                exit 1
+            fi
+
             instantwallpaper w
             sleep 20
         fi
