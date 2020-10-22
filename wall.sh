@@ -6,6 +6,12 @@
 
 source /usr/share/instantwallpaper/wallutils.sh
 
+if [ "$(pgrep instantwallper | wc -l)" -gt 200 ]
+then
+    echo "recursion loop detected, exiting"
+    exit 1
+fi
+
 # fetch monitor resolution
 setupres
 
