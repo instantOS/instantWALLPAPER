@@ -46,7 +46,7 @@ instantoverlay() {
             return
         else
             [ -e overlay.png ] && rm overlay.png
-            wget -q "https://media.githubusercontent.com/media/instantOS/instantLOGO/master/wallpaper/overlay.png"
+            wget -q "https://raw.githubusercontent.com/instantOS/instantLOGO/master/wallpaper/overlay.png"
         fi
     fi
 }
