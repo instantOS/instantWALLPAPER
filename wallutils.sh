@@ -88,8 +88,22 @@ viviwall() {
 defaultwall() {
     instantoverlay
     imgresize overlay.png "$RESOLUTION"
-    convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
-    convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$(getinstanttheme)".png
+
+    if [ -n "$3" ]
+    then
+        OUTNAME="$3"
+    else
+        OUTNAME="$(iconf theme:arc)"
+    fi
+
+    if [ -n "$1" ] && [ -n "$2" ]; then
+        convert overlay.png -fill "$1" -colorize 100 color.png
+        convert color.png -background "$2" -alpha remove -alpha off "$OUTNAME".png
+    else
+        convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
+        convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$OUTNAME".png
+    fi
+
     rm color.png
 }
 
@@ -178,9 +192,9 @@ fetchwallpapers() {
         mkdir -p "$(xdg-user-dir PICTURES)/wallpapers"
     fi
     cd "$(xdg-user-dir PICTURES)/wallpapers" || return 1
-    
+
     rm readme.jpg
-    
+
     if [ "$(ls | wc -l)" -gt 6 ]; then
         echo "wallpapers already downloaded"
         echo "remove $(xdg-user-dir PICTURES)/wallpapers to redownload them"

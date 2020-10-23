@@ -6,8 +6,7 @@
 
 source /usr/share/instantwallpaper/wallutils.sh
 
-if [ "$(pgrep instantwallper | wc -l)" -gt 200 ]
-then
+if [ "$(pgrep instantwallper | wc -l)" -gt 200 ]; then
     echo "recursion loop detected, exiting"
     exit 1
 fi
@@ -199,6 +198,25 @@ genwallpaper() {
 
 if [ -n "$1" ]; then
     # generate wallpaper with source $1
+    if [ "$1" = "color" ]; then
+        THEME="$(iconf theme:arc)"
+        if [ -n "$2" ]; then
+            FGCOLOR="$2"
+        else
+            FGCOLOR="$(grep foreground /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#......')"
+        fi
+
+        if [ -n "$3" ]; then
+            BGCOLOR="$2"
+        else
+            BGCOLOR="$(grep background /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#......')"
+        fi
+        mkdir -p ~/instantos/wallpapers/color
+        cd ~/instantos/wallpapers/color || exit 1
+        defaultwall "$FGCOLOR" "$BGCOLOR" "color.png"
+
+        exit
+    fi
     genwallpaper "$1"
 elif ! [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
     # generate if no wallpaper is found
@@ -233,8 +251,7 @@ if [ -z "$3" ]; then
 
             WALLCOUNT="$(pgrep -f instantwallpaper | wc -l)"
 
-            if [ "$WALLCOUNT" -gt 80 ]
-            then
+            if [ "$WALLCOUNT" -gt 80 ]; then
                 exit 1
             fi
 
