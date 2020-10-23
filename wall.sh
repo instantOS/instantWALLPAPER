@@ -203,17 +203,20 @@ if [ -n "$1" ]; then
         if [ -n "$2" ]; then
             FGCOLOR="$2"
         else
-            FGCOLOR="$(grep foreground /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#......')"
+            FGCOLOR="$(grep foreground /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#.*')"
         fi
 
         if [ -n "$3" ]; then
-            BGCOLOR="$2"
+            BGCOLOR="$3"
         else
-            BGCOLOR="$(grep background /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#......')"
+            BGCOLOR="$(grep background /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#.*')"
         fi
+        echo "theme $THEME"
+        echo "bg color $BGCOLOR"
+        echo "fg color $FGCOLOR"
         mkdir -p ~/instantos/wallpapers/color
         cd ~/instantos/wallpapers/color || exit 1
-        defaultwall "$FGCOLOR" "$BGCOLOR" "color.png"
+        defaultwall "$FGCOLOR" "$BGCOLOR" "customcolor"
 
         exit
     fi
