@@ -142,22 +142,31 @@ compwallpaper() {
         instantoverlay
         imgresize overlay.png "$RESOLUTION"
 
+        # perpare effects
+        case $(iconf logoeffects) in
+        "invert")
+            convert wall.png -channel RGB -negate effect.png
+            ;;
+        "blur")
+            convert wall.png -blur 100x100 effect.png
+            ;;
+        "both")
+            convert wall.png -blur 100x100 -channel RGB -negate effect.png
+            ;;
+        esac
+
         # create mask from overlay
         convert overlay.png -alpha extract mask.png
-        # cut the image with the mask
-        composite -compose CopyOpacity mask.png wall.png cut.png
-        # Convert to black and white the cut
-        # convert cut.png -colorspace Gray blackandwhite.png
-        # Negate the black and white cut
-        convert cut.png -channel RGB -negate invert.png
+        # cut the effect image with the mask
+        composite -compose CopyOpacity mask.png effect.png cut.png
         # draw the computed overlay on top of the background
-        convert wall.png invert.png -gravity center -composite instantwallpaper.png
+        convert wall.png cut.png -gravity center -composite instantwallpaper.png
 
         rm wall.png
         rm mask.png
         rm cut.png
         rm blackandwhite.png
-        rm invert.png
+        rm effect.png
     else
         echo "logo disabled"
         mv wall.png instantwallpaper.png
