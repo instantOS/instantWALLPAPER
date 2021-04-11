@@ -9,6 +9,7 @@ all:
 install: wall.sh wallutils.sh
 	$(info "INFO: install PREFIX: $(PREFIX)")
 	mkdir -p $(DESTDIR)$(PREFIX)share/instantwallpaper
+	mkdir -p $(DESTDIR)$(PREFIX)share/backgrounds
 	install -Dm 755 wall.sh $(DESTDIR)$(PREFIX)bin/instantwallpaper
 	install -m 644 wallutils.sh $(DESTDIR)$(PREFIX)share/instantwallpaper/
 
