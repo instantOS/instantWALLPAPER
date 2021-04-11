@@ -142,18 +142,17 @@ compwallpaper() {
         instantoverlay
         imgresize overlay.png "$RESOLUTION"
 
-        # perpare effects
-        case $(iconf logoeffects) in
-        "invert")
-            convert wall.png -channel RGB -negate effect.png
-            ;;
-        "blur")
-            convert wall.png -blur 100x100 effect.png
-            ;;
-        "both")
-            convert wall.png -blur 100x100 -channel RGB -negate effect.png
-            ;;
-        esac
+        # perpare effect settings
+        iconf logoeffects | grep swirl && EFFECTS+=("-swirl" "360")
+        iconf logoeffects | grep flip && EFFECTS+=("-flip")
+        iconf logoeffects | grep blur && EFFECTS+=("-blur" "100x100")
+        iconf logoeffects | grep invert && EFFECTS+=("-channel" "RGB" "-negate")
+        iconf logoeffects | grep grayscale && EFFECTS+=("-colorspace" "Gray")
+        iconf logoeffects | grep contrast && EFFECTS+=("-level" "20000")
+        iconf logoeffects | grep dim && EFFECTS+=("-modulate" "50")
+        iconf logoeffects | grep brighten | grep -v dim && EFFECTS+=("-modulate" "150")
+
+        convert wall.png "${EFFECTS[@]}" effect.png
 
         # create mask from overlay
         convert overlay.png -alpha extract mask.png
@@ -165,7 +164,6 @@ compwallpaper() {
         rm wall.png
         rm mask.png
         rm cut.png
-        rm blackandwhite.png
         rm effect.png
     else
         echo "logo disabled"
