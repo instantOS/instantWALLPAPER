@@ -142,6 +142,12 @@ compwallpaper() {
         instantoverlay
         imgresize overlay.png "$RESOLUTION"
 
+        # set to invert if logoeffects is not set or broken
+        iconf logoeffects |
+        grep -E 'brighten|dim|contrast|grayscale|invert|blur|flip|swirl' ||
+        iconf logoeffects 'invert'
+
+
         # perpare effect settings
         iconf logoeffects | grep swirl && EFFECTS+=("-swirl" "360")
         iconf logoeffects | grep flip && EFFECTS+=("-flip")
@@ -152,6 +158,7 @@ compwallpaper() {
         iconf logoeffects | grep dim && EFFECTS+=("-modulate" "50")
         iconf logoeffects | grep brighten | grep -v dim && EFFECTS+=("-modulate" "150")
 
+	# apply effects
         convert wall.png "${EFFECTS[@]}" effect.png
 
         # create mask from overlay
