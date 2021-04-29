@@ -11,6 +11,19 @@ if [ "$(pgrep instantwallper | wc -l)" -gt 200 ]; then
     exit 1
 fi
 
+echousage() {
+    echo 'usage: instantwallpaper [action]
+    gui          open gui settings for setting a custom wallpaper
+    clear        remove custom wallpaper and reset to default wallpaper behaviour
+    set          set custom image as wallpaper
+    customlogo   set custom image as logo (requires alpha channel)
+    logo         set custom image with logo as wallpaper
+    offline      run instantwallpaper in offline mode
+    fetch        fetch selection of wallpapers to choose from
+    select       select wallpaper from fetched selection'
+    exit
+}
+
 # fetch monitor resolution
 setupres
 
@@ -107,13 +120,19 @@ select)
     nitrogen "$(xdg-user-dir PICTURES)"/wallpapers/
     exit
     ;;
+-h)
+    echousage
+    ;;
+--help)
+    echousage
+    ;;
 esac
 
 ! checkinternet && fallbackwallpaper && exit
 
 # detect custom wallpaper from elsewhere
 if [ -e ~/instantos/wallpapers/custom.png ]; then
-    cd ~/instantos/wallpapers
+    cd ~/instantos/wallpapers || exit 1
     imgresize custom.png "$RESOLUTION"
     ifeh custom.png
     exit
@@ -133,9 +152,9 @@ fi
 source /usr/share/paperbash/import.sh || source <(curl -Ls https://git.io/JerLG)
 pb instantos
 
-cd
+cd || exit 1
 mkdir -p "$HOME"/instantos/wallpapers/default &>/dev/null
-cd "$HOME"/instantos/wallpapers
+cd "$HOME"/instantos/wallpapers || exit 1
 
 randomwallpaper() {
     array[0]="googlewallpaper"
@@ -151,20 +170,21 @@ randomwallpaper() {
     $WALLCOMMAND
 }
 
-export RESOLUTION=$(iconf max:1920x1080)
+RESOLUTION=$(iconf max:1920x1080)
+export RESOLUTION
 
 # fetch logo overlay
 instantoverlay
-if ! [ -e ./default/$(getinstanttheme).png ]; then
+if ! [ -e ./default/"$(getinstanttheme)".png ]; then
     echo "generating default wallpaper"
-    cd default
+    cd default || exit 1
     defaultwall
-    cd ..
+    cd .. || exit 1
 fi
 
 # generate the default wallpaper with a scraped photo and the logo
 genwallpaper() {
-    ifeh default/$(getinstanttheme).png
+    ifeh default/"$(getinstanttheme)".png
     if [ -n "$1" ]; then
         case "$1" in
         b*)
