@@ -20,7 +20,8 @@ echousage() {
     logo         set custom image with logo as wallpaper
     offline      run instantwallpaper in offline mode
     fetch        fetch selection of wallpapers to choose from
-    select       select wallpaper from fetched selection'
+    select       select wallpaper from fetched selection
+    restore      restore current wallpaper in case of rendering errors'
     exit
 }
 
@@ -118,6 +119,19 @@ select)
         echo "wallpapers already downloaded"
     fi
     nitrogen "$(xdg-user-dir PICTURES)"/wallpapers/
+    exit
+    ;;
+restore)
+    echo 'restoring wallpaper'
+    if [ -e ~/instantos/wallpapers/custom.png ]; then
+        ifeh ~/instantos/wallpapers/custom.png
+    else
+        if [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
+            ifeh ~/instantos/wallpapers/instantwallpaper.png
+        else
+            ifeh /usr/share/instantwallpaper/defaultphoto.png
+        fi
+    fi
     exit
     ;;
 -h)
