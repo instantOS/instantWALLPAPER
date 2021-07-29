@@ -21,7 +21,8 @@ echousage() {
     offline      run instantwallpaper in offline mode
     fetch        fetch selection of wallpapers to choose from
     select       select wallpaper from fetched selection
-    restore      restore current wallpaper in case of rendering errors'
+    restore      restore current wallpaper in case of rendering errors
+    color fg bg  generate colored wallpaper with instantOS logo'
     exit
 }
 
@@ -134,6 +135,35 @@ restore)
     fi
     exit
     ;;
+color)
+
+    echo 'setting colored wallpaper'
+    THEME="$(iconf theme:arc)"
+    if [ -n "$2" ]; then
+        FGCOLOR="$2"
+    else
+        FGCOLOR="$(grep foreground /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#.*')"
+    fi
+
+    if [ -n "$3" ]; then
+        BGCOLOR="$3"
+    else
+        BGCOLOR="$(grep background /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#.*')"
+    fi
+    echo "theme $THEME"
+    echo "bg color $BGCOLOR"
+    echo "fg color $FGCOLOR"
+    mkdir -p ~/instantos/wallpapers/color
+    cd ~/instantos/wallpapers/color || exit 1
+    defaultwall "$FGCOLOR" "$BGCOLOR" "customcolor"
+    [ -e "customcolor.png" ] || {
+        notify-send 'failed to set colored wallpaper'
+        exit 1
+    }
+    instantwallpaper set customcolor.png
+
+    exit
+    ;;
 -h)
     echousage
     ;;
@@ -231,29 +261,6 @@ genwallpaper() {
 }
 
 if [ -n "$1" ]; then
-    # generate wallpaper with source $1
-    if [ "$1" = "color" ]; then
-        THEME="$(iconf theme:arc)"
-        if [ -n "$2" ]; then
-            FGCOLOR="$2"
-        else
-            FGCOLOR="$(grep foreground /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#.*')"
-        fi
-
-        if [ -n "$3" ]; then
-            BGCOLOR="$3"
-        else
-            BGCOLOR="$(grep background /usr/share/instantthemes/colors/"$THEME".theme | grep -o '#.*')"
-        fi
-        echo "theme $THEME"
-        echo "bg color $BGCOLOR"
-        echo "fg color $FGCOLOR"
-        mkdir -p ~/instantos/wallpapers/color
-        cd ~/instantos/wallpapers/color || exit 1
-        defaultwall "$FGCOLOR" "$BGCOLOR" "customcolor"
-
-        exit
-    fi
     genwallpaper "$1"
 elif ! [ -e ~/instantos/wallpapers/instantwallpaper.png ]; then
     # generate if no wallpaper is found
