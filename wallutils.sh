@@ -4,7 +4,7 @@
 ## utilities for wallpaper generation on instantOS ##
 #####################################################
 
-RAW="https://raw.githubusercontent.com/instantOS/instantLOGO/master"
+RAW="https://raw.githubusercontent.com/instantOS/instantLOGO/main"
 
 setupres() {
     export RESOLUTION=$(iconf max:1920x1080)
@@ -46,7 +46,7 @@ instantoverlay() {
             return
         else
             [ -e overlay.png ] && rm overlay.png
-            wget -q "https://raw.githubusercontent.com/instantOS/instantLOGO/master/wallpaper/overlay.png"
+            wget -q "https://raw.githubusercontent.com/instantOS/instantLOGO/main/wallpaper/overlay.png"
         fi
     fi
 }
@@ -75,13 +75,13 @@ wallhaven() {
 
 wallist() {
     echo "downloading wallpaper from list"
-    wget -qO photo.jpg "$(curl -s 'https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt' | shuf | head -1)"
+    wget -qO photo.jpg "$(curl -s 'https://raw.githubusercontent.com/instantOS/instantWALLPAPER/main/list.txt' | shuf | head -1)"
 }
 
 viviwall() {
     echo "vk pictures wallpaper"
-    LINK="$(curl -s https://github.com/instantOS/wallpapers/tree/master/wallpapers | grep -o 'wall[0-9]*\.jpg' | sort -u | shuf | head -1)"
-    wget -qO photo.jpg "https://raw.githubusercontent.com/instantOS/wallpapers/master/wallpapers/$LINK"
+    LINK="$(curl -s https://github.com/instantOS/wallpapers/tree/main/wallpapers | grep -o 'wall[0-9]*\.jpg' | sort -u | shuf | head -1)"
+    wget -qO photo.jpg "https://raw.githubusercontent.com/instantOS/wallpapers/main/wallpapers/$LINK"
 }
 
 # generate default mono colored logo wallpaper
@@ -209,7 +209,7 @@ fetchwallpapers() {
         exit
     fi
 
-    curl -s https://raw.githubusercontent.com/instantOS/instantWALLPAPER/master/list.txt | grep -v '512pixels.net' >/tmp/instantwallpaperlist
+    curl -s https://raw.githubusercontent.com/instantOS/instantWALLPAPER/main/list.txt | grep -v '512pixels.net' >/tmp/instantwallpaperlist
     WALLCOUNTER=1
     while read p; do
         echo "Downloading wallpaper $WALLCOUNTER"
