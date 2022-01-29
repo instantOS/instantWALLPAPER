@@ -99,11 +99,11 @@ defaultwall() {
     if [ -n "$1" ] && [ -n "$2" ]; then
         echo "generating custom image"
         convert overlay.png -fill "$1" -colorize 100 color.png
-        convert color.png -background "$2" -alpha remove -alpha off "$OUTNAME".png
+        convert color.png -background "$2" -flatten "$OUTNAME".png
     else
         echo "defaulting to theme colors"
         convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
-        convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$OUTNAME".png
+        convert color.png -background "$(instantbackground)" -flatten "$OUTNAME".png
     fi
 
     rm color.png
