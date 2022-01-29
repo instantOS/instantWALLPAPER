@@ -103,7 +103,7 @@ defaultwall() {
     else
         echo "defaulting to theme colors"
         convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
-        convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$OUTNAME".png
+        convert color.png -background "$(instantbackground)" -flatten "$OUTNAME".png
     fi
 
     rm color.png
