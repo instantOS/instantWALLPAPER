@@ -22,6 +22,9 @@ echousage() {
     fetch        fetch selection of wallpapers to choose from
     select       select wallpaper from fetched selection
     restore      restore current wallpaper in case of rendering errors
+    bing         generate wallpaper from daily bing photo
+    google       generate wallpaper from random chromecast wallpaper
+    haven        generate wallpaper from wallpaperhaven
     color fg bg  generate colored wallpaper with instantOS logo'
     exit
 }

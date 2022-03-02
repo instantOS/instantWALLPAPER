@@ -102,8 +102,8 @@ defaultwall() {
         convert color.png -background "$2" -alpha remove -alpha off "$OUTNAME".png
     else
         echo "defaulting to theme colors"
-        convert overlay.png -fill "$(instantforeground)" -colorize 100 color.png
-        convert color.png -background "$(instantbackground)" -alpha remove -alpha off "$OUTNAME".png
+        convert overlay.png -fill "$(instantthemes query colors.accent "#88B2F6")" -colorize 100 color.png
+        convert color.png -background "$(instantthemes query colors.background "#121212")" -alpha remove -alpha off "$OUTNAME".png
     fi
 
     rm color.png
