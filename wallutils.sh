@@ -33,7 +33,7 @@ imgresize() {
         return 0
     fi
     mv "$1" "${1%.*}.1.png"
-    magick convert "${1%.*}.1.png" -alpha on -background none \
+    magick "${1%.*}.1.png" -alpha on -background none \
         -gravity center -resize "$2^" -gravity center -extent "$2" "${3:-$1}"
     rm "${1%.*}.1.png"
 }
@@ -98,12 +98,12 @@ defaultwall() {
 
     if [ -n "$1" ] && [ -n "$2" ]; then
         echo "generating custom image"
-        magick convert overlay.png -fill "$1" -colorize 100 color.png
-        magick convert color.png -background "$2" -alpha remove -alpha off "$OUTNAME".png
+        magick overlay.png -fill "$1" -colorize 100 color.png
+        magick color.png -background "$2" -alpha remove -alpha off "$OUTNAME".png
     else
         echo "defaulting to theme colors"
-        magick convert overlay.png -fill "$(instantthemes query colors.accent "#88B2F6")" -colorize 100 color.png
-        magick convert color.png -background "$(instantthemes query colors.background "#121212")" -alpha remove -alpha off "$OUTNAME".png
+        magick overlay.png -fill "$(instantthemes query colors.accent "#88B2F6")" -colorize 100 color.png
+        magick color.png -background "$(instantthemes query colors.background "#121212")" -alpha remove -alpha off "$OUTNAME".png
     fi
 
     rm color.png
@@ -143,15 +143,15 @@ compwallpaper() {
         imgresize overlay.png "$RESOLUTION"
 
         # create mask from overlay
-        magick convert overlay.png -alpha extract mask.png
+        magick overlay.png -alpha extract mask.png
         # cut the image with the mask
         composite -compose CopyOpacity mask.png wall.png cut.png
         # Convert to black and white the cut
         # convert cut.png -colorspace Gray blackandwhite.png
         # Negate the black and white cut
-        magick convert cut.png -channel RGB -negate invert.png
+        magick cut.png -channel RGB -negate invert.png
         # draw the computed overlay on top of the background
-        magick convert wall.png invert.png -gravity center -composite instantwallpaper.png
+        magick wall.png invert.png -gravity center -composite instantwallpaper.png
 
         rm wall.png
         rm mask.png
