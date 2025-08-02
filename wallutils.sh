@@ -54,22 +54,24 @@ instantoverlay() {
 # bing daily photo
 bingwallpaper() {
     echo "downloading bing wallpaper"
-    wget -qO photo.jpg "$(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')"
+    PHOTO_URL="$(curl -s https://bing.biturl.top/ | grep -Eo 'www.bing.com/[^"]*(jpg|png)')"
+    wget -qO photo.jpg "$PHOTO_URL"
 }
 
 googlewallpaper() {
     echo "downloading wallpaper from google"
-    LINK="$(curl -s https://raw.githubusercontent.com/dconnolly/chromecast-backgrounds/master/README.md |
-        shuf | head -1 | grep -o 'http[^ )]*')"
+    WALLIST="https://chromecastbg.alexmeub.com/images.v9.json"
+    LINK="$(curl -s "$WALLIST" | jq -r '.[].url' | shuf | head -1)"
     wget -qO photo.jpg "$LINK"
 }
 
 wallhaven() {
     echo "downloading wallpaper from wallhaven"
-    WALLURL=$(curl -Ls 'https://wallhaven.cc/search?q=id%3A711&categories=111&purity=100&sorting=random&order=desc' |
+    WALLIST='https://wallhaven.cc/search?q=id%3A711&categories=111&purity=100&sorting=random&order=desc'
+    WALLURL=$(curl -Ls "$WALLIST" |
         grep -o 'https://wallhaven.cc/w/[^"]*' | shuf | head -1)
-
-    wget -qO photo.jpg "$(curl -s "$WALLURL" | grep -o 'https://w.wallhaven.cc/full/.*/.*.jpg' | head -1)"
+    PHOTO_URL="$(curl -s "$WALLURL" | grep -o 'https://w.wallhaven.cc/full/.*/.*.jpg' | head -1)"
+    wget -qO photo.jpg "$PHOTO_URL"
 
 }
 
@@ -89,8 +91,7 @@ defaultwall() {
     instantoverlay
     imgresize overlay.png "$RESOLUTION"
 
-    if [ -n "$3" ]
-    then
+    if [ -n "$3" ]; then
         OUTNAME="$3"
     else
         OUTNAME="$(iconf theme:arc)"
