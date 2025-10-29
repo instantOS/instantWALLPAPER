@@ -46,7 +46,7 @@ clear)
     if [ -e ~/instantos/wallpapers/custom.png ]; then
         echo "clearing custom wallpaper"
         rm ~/instantos/wallpapers/custom.png
-        rm -rf ~/.config/nitrogen
+        rm -f "$HOME/.fehbg"
         instantwallpaper
     else
         echo "no custom wallpaper was found"
@@ -117,12 +117,25 @@ fetch)
     exit
     ;;
 select)
-    if ! [ -e "$(xdg-user-dir PICTURES)"/wallpapers/10.jpg ]; then
+    WALLDIR="$(xdg-user-dir PICTURES)"/wallpapers
+
+    if ! [ -e "$WALLDIR"/10.jpg ]; then
         st -e bash -c "instantwallpaper fetch"
     else
         echo "wallpapers already downloaded"
     fi
-    nitrogen "$(xdg-user-dir PICTURES)"/wallpapers/
+
+    WALLPATH=$(zenity --file-selection --filename="$WALLDIR/" --file-filter='Image files (png, jpg) | *.png *.jpg')
+
+    if [ -n "$WALLPATH" ]; then
+        if checkwall "$WALLPATH"; then
+            ifeh "$WALLPATH"
+        else
+            exit 1
+        fi
+    else
+        echo "no wallpaper selected"
+    fi
     exit
     ;;
 restore)
@@ -185,12 +198,12 @@ if [ -e ~/instantos/wallpapers/custom.png ]; then
     exit
 fi
 
-# allow manually overriding wallpaper with nitrogen
-if [ -e ~/.config/nitrogen/bg-saved.cfg ]; then
+# allow manually overriding wallpaper with feh
+if [ -e "$HOME/.fehbg" ]; then
     if [ -z "$1" ] || grep -q 'offline' <<<"$1"; then
-        if ! grep '/home/.*/instantos/wallpapers/' ~/.config/nitrogen/bg-saved.cfg; then
-            echo "using nitrogen wallpaper"
-            nitrogen --restore
+        if ! grep -Fq "$HOME/instantos/wallpapers/" "$HOME/.fehbg"; then
+            echo "using feh wallpaper"
+            sh "$HOME/.fehbg"
             exit
         fi
     fi
